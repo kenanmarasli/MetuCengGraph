@@ -1,0 +1,11 @@
+Checks: "-*,\
+boost-*,\
+bugprone-*,\
+clang-analyzer-*,\
+concurrency-*,\
+cppcoreguidelines-*,\
+modernize-*,\
+performance-*,\
+portability-*,\
+readability-*,\
+"
