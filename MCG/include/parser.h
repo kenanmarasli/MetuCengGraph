@@ -1,5 +1,5 @@
-#ifndef METUCENGGRAPH_PARSER
-#define METUCENGGRAPH_PARSER
+#ifndef METUCENGGRAPH_PARSER_H
+#define METUCENGGRAPH_PARSER_H
 
 #include <string>
 #include <vector>
