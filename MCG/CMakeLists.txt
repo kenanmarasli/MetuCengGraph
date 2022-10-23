@@ -8,7 +8,6 @@ target_include_directories ( metucenggraph
 	PUBLIC "include"
 )
 
-find_package (tinyxml2 REQUIRED)
 target_link_libraries ( metucenggraph
-	PRIVATE tinyxml2::tinyxml2
+	PRIVATE tinyxml2
 )
