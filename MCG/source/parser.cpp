@@ -3,7 +3,7 @@
 #include <sstream>
 #include <stdexcept>
 
-void MetuCengGraph::Scene::loadFromXml(const std::string &filepath) {
+void MCG::Scene::loadFromXml(const std::string &filepath) {
     tinyxml2::XMLDocument file;
     std::stringstream stream;
 

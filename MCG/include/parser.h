@@ -1,10 +1,10 @@
-#ifndef METUCENGGRAPH_PARSER_H
-#define METUCENGGRAPH_PARSER_H
+#ifndef MCG_PARSER_H
+#define MCG_PARSER_H
 
 #include <string>
 #include <vector>
 
-namespace MetuCengGraph {
+namespace MCG {
 // Notice that all the structures are as simple as possible
 // so that you are not enforced to adopt any style or design.
 struct Vec3f {
@@ -82,6 +82,6 @@ struct Scene {
     // Functions
     void loadFromXml(const std::string &filepath);
 };
-} // namespace MetuCengGraph
+} // namespace MCG
 
 #endif
