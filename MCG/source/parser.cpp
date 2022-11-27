@@ -1,5 +1,6 @@
 #include "parser.h"
 #include "tinyxml2.h"
+#include <cstring>
 #include <sstream>
 #include <stdexcept>
 
@@ -104,8 +105,14 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
     element = element->FirstChildElement("Material");
     Material material;
     while (element) {
-        material.is_mirror = (element->Attribute("type", "mirror") != NULL);
-
+        const char *matTypeAttr = element->Attribute("type", "mirror");
+        if (!matTypeAttr || strcmp(matTypeAttr, "conductor") == 0) {
+            material.type = MaterialType::Conductor;
+        } else if (strcmp(matTypeAttr, "dielectric") == 0) {
+            material.type = MaterialType::Dielectric;
+        } else if (strcmp(matTypeAttr, "mirror") == 0) {
+            material.type = MaterialType::Mirror;
+        }
         child = element->FirstChildElement("AmbientReflectance");
         if (child) {
             stream << child->GetText() << std::endl;

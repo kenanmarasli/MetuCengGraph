@@ -34,8 +34,14 @@ struct PointLight {
     Vec3f intensity;
 };
 
+enum class MaterialType {
+    Conductor,
+    Dielectric,
+    Mirror
+};
+
 struct Material {
-    bool is_mirror;
+    MaterialType type;
     Vec3f ambient;
     Vec3f diffuse;
     Vec3f specular;
