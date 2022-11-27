@@ -107,15 +107,35 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
         material.is_mirror = (element->Attribute("type", "mirror") != NULL);
 
         child = element->FirstChildElement("AmbientReflectance");
-        stream << child->GetText() << std::endl;
+        if (child) {
+            stream << child->GetText() << std::endl;
+        } else {
+            stream << "0 0 0" << std::endl;
+        }
         child = element->FirstChildElement("DiffuseReflectance");
-        stream << child->GetText() << std::endl;
+        if (child) {
+            stream << child->GetText() << std::endl;
+        } else {
+            stream << "0 0 0" << std::endl;
+        }
         child = element->FirstChildElement("SpecularReflectance");
-        stream << child->GetText() << std::endl;
+        if (child) {
+            stream << child->GetText() << std::endl;
+        } else {
+            stream << "0 0 0" << std::endl;
+        }
         child = element->FirstChildElement("MirrorReflectance");
-        stream << child->GetText() << std::endl;
+        if (child) {
+            stream << child->GetText() << std::endl;
+        } else {
+            stream << "0 0 0" << std::endl;
+        }
         child = element->FirstChildElement("PhongExponent");
-        stream << child->GetText() << std::endl;
+        if (child) {
+            stream << child->GetText() << std::endl;
+        } else {
+            stream << "0 0 0" << std::endl;
+        }
 
         stream >> material.ambient.x >> material.ambient.y >>
             material.ambient.z;
