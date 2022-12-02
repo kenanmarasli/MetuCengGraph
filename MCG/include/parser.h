@@ -35,6 +35,7 @@ struct PointLight {
 };
 
 enum class MaterialType {
+    Default,
     Conductor,
     Dielectric,
     Mirror
