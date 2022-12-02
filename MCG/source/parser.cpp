@@ -105,7 +105,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
     element = element->FirstChildElement("Material");
     Material material;
     while (element) {
-        const char *matTypeAttr = element->Attribute("type", "mirror");
+        const char *matTypeAttr = element->Attribute("type");
         if (!matTypeAttr || strcmp(matTypeAttr, "conductor") == 0) {
             material.type = MaterialType::Conductor;
         } else if (strcmp(matTypeAttr, "dielectric") == 0) {
