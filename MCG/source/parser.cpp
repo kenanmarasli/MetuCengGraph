@@ -146,6 +146,18 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
         } else {
             stream << "0.1" << std::endl;
         }
+        child = element->FirstChildElement("AbsorptionCoefficient");
+        if (child) {
+            stream << child->GetText() << std::endl;
+        } else {
+            stream << "0.01 0.01 0.01" << std::endl;
+        }
+        child = element->FirstChildElement("RefractionIndex");
+        if (child) {
+            stream << child->GetText() << std::endl;
+        } else {
+            stream << "1" << std::endl;
+        }
 
         stream >> material.ambient.x >> material.ambient.y >>
             material.ambient.z;
@@ -155,6 +167,10 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
             material.specular.z;
         stream >> material.mirror.x >> material.mirror.y >> material.mirror.z;
         stream >> material.phong_exponent;
+        stream >> material.absorbtion_coefficient.x >>
+            material.absorbtion_coefficient.y >>
+            material.absorbtion_coefficient.z;
+        stream >> material.refraction_index;
 
         materials.push_back(material);
         element = element->NextSiblingElement("Material");
