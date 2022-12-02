@@ -48,7 +48,7 @@ struct Material {
     Vec3f specular;
     Vec3f mirror;
     float phong_exponent;
-    Vec3f absorbtion_coefficient;
+    Vec3f absorption_coefficient;
     float refraction_index;
 };
 
