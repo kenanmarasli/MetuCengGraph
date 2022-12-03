@@ -51,13 +51,32 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
     element = element->FirstChildElement("Camera");
     Camera camera;
     while (element) {
-        auto child = element->FirstChildElement("Position");
-        stream << child->GetText() << std::endl;
-        child = element->FirstChildElement("Gaze");
+        tinyxml2::XMLElement *child;
+        bool isLookAt = (element->Attribute("type", "lookAt") != NULL);
+        if (isLookAt) {
+            camera.type = CameraType::Default;
+            child = element->FirstChildElement("GazePoint");
+            stream << child->GetText() << std::endl;
+            child = element->FirstChildElement("FovY");
+            stream << child->GetText() << std::endl;
+
+            stream >> camera.gazePoint.x >> camera.gazePoint.y >>
+                camera.gazePoint.z;
+            stream >> camera.fovY;
+        } else {
+            camera.type = CameraType::LookAt;
+            child = element->FirstChildElement("Gaze");
+            stream << child->GetText() << std::endl;
+            child = element->FirstChildElement("NearPlane");
+            stream << child->GetText() << std::endl;
+
+            stream >> camera.gaze.x >> camera.gaze.y >> camera.gaze.z;
+            stream >> camera.near_plane.x >> camera.near_plane.y >>
+                camera.near_plane.z >> camera.near_plane.w;
+        }
+        child = element->FirstChildElement("Position");
         stream << child->GetText() << std::endl;
         child = element->FirstChildElement("Up");
-        stream << child->GetText() << std::endl;
-        child = element->FirstChildElement("NearPlane");
         stream << child->GetText() << std::endl;
         child = element->FirstChildElement("NearDistance");
         stream << child->GetText() << std::endl;
@@ -67,10 +86,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
         stream << child->GetText() << std::endl;
 
         stream >> camera.position.x >> camera.position.y >> camera.position.z;
-        stream >> camera.gaze.x >> camera.gaze.y >> camera.gaze.z;
         stream >> camera.up.x >> camera.up.y >> camera.up.z;
-        stream >> camera.near_plane.x >> camera.near_plane.y >>
-            camera.near_plane.z >> camera.near_plane.w;
         stream >> camera.near_distance;
         stream >> camera.image_width >> camera.image_height;
         stream >> camera.image_name;
@@ -197,7 +213,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
         stream >> mesh.material_id;
 
         child = element->FirstChildElement("Faces");
-        const char *plyFilename = element->Attribute("plyFile");
+        const char *plyFilename = child->Attribute("plyFile");
         if (plyFilename) {
             std::filesystem::path plyPath{plyFilename};
             if (plyPath.is_relative()) {

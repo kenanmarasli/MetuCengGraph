@@ -20,10 +20,15 @@ struct Vec4f {
     float x, y, z, w;
 };
 
+enum class CameraType { Default, LookAt };
+
 struct Camera {
+    CameraType type;
     Vec3f position;
     Vec3f gaze;
     Vec3f up;
+    Vec3f gazePoint;
+    float fovY;
     Vec4f near_plane;
     float near_distance;
     int image_width, image_height;
