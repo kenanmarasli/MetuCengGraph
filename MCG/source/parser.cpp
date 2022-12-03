@@ -1,6 +1,7 @@
 #include "parser.h"
 #include "tinyxml2.h"
 #include <cstring>
+#include <filesystem>
 #include <sstream>
 #include <stdexcept>
 
@@ -196,16 +197,28 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
         stream >> mesh.material_id;
 
         child = element->FirstChildElement("Faces");
-        stream << child->GetText() << std::endl;
-        Face face;
-        while (!(stream >> face.v0_id).eof()) {
-            stream >> face.v1_id >> face.v2_id;
-            mesh.faces.push_back(face);
+        const char *plyFilename = element->Attribute("plyFile");
+        if (plyFilename) {
+            std::filesystem::path plyPath{plyFilename};
+            if (plyPath.is_relative()) {
+                std::filesystem::path path{filepath};
+                path.replace_filename(plyPath);
+                plyPath = path;
+            }
+            ply::PlyMesh plyMesh;
+            ply::parsePly(plyPath.string().c_str(), plyMesh);
+            plyMeshes.push_back(plyMesh);
+        } else {
+            stream << child->GetText() << std::endl;
+            Face face;
+            while (!(stream >> face.v0_id).eof()) {
+                stream >> face.v1_id >> face.v2_id;
+                mesh.faces.push_back(face);
+            }
+            meshes.push_back(mesh);
+            mesh.faces.clear();
         }
         stream.clear();
-
-        meshes.push_back(mesh);
-        mesh.faces.clear();
         element = element->NextSiblingElement("Mesh");
     }
     stream.clear();

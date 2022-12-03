@@ -1,6 +1,7 @@
 #ifndef MCG_PARSER_H
 #define MCG_PARSER_H
 
+#include "parsePly.h"
 #include <string>
 #include <vector>
 
@@ -34,12 +35,7 @@ struct PointLight {
     Vec3f intensity;
 };
 
-enum class MaterialType {
-    Default,
-    Conductor,
-    Dielectric,
-    Mirror
-};
+enum class MaterialType { Default, Conductor, Dielectric, Mirror };
 
 struct Material {
     MaterialType type;
@@ -87,6 +83,7 @@ struct Scene {
     std::vector<Mesh> meshes;
     std::vector<Triangle> triangles;
     std::vector<Sphere> spheres;
+    std::vector<ply::PlyMesh> plyMeshes;
 
     // Functions
     void loadFromXml(const std::string &filepath);
