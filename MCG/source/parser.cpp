@@ -54,7 +54,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
         tinyxml2::XMLElement *child;
         bool isLookAt = (element->Attribute("type", "lookAt") != NULL);
         if (isLookAt) {
-            camera.type = CameraType::Default;
+            camera.type = CameraType::LookAt;
             child = element->FirstChildElement("GazePoint");
             stream << child->GetText() << std::endl;
             child = element->FirstChildElement("FovY");
@@ -64,7 +64,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
                 camera.gazePoint.z;
             stream >> camera.fovY;
         } else {
-            camera.type = CameraType::LookAt;
+            camera.type = CameraType::Default;
             child = element->FirstChildElement("Gaze");
             stream << child->GetText() << std::endl;
             child = element->FirstChildElement("NearPlane");
