@@ -206,11 +206,9 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
     // Get Meshes
     element = root->FirstChildElement("Objects");
     element = element->FirstChildElement("Mesh");
-    Mesh mesh;
     while (element) {
         child = element->FirstChildElement("Material");
         stream << child->GetText() << std::endl;
-        stream >> mesh.material_id;
 
         child = element->FirstChildElement("Faces");
         const char *plyFilename = child->Attribute("plyFile");
@@ -221,10 +219,13 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
                 path.replace_filename(plyPath);
                 plyPath = path;
             }
-            ply::PlyMesh plyMesh;
-            ply::parsePly(plyPath.string().c_str(), plyMesh);
+            PlyMesh plyMesh;
+            stream >> plyMesh.material_id;
+            ply::parsePly(plyPath.string().c_str(), plyMesh.mesh);
             plyMeshes.push_back(plyMesh);
         } else {
+            Mesh mesh;
+            stream >> mesh.material_id;
             stream << child->GetText() << std::endl;
             Face face;
             while (!(stream >> face.v0_id).eof()) {

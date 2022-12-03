@@ -64,6 +64,11 @@ struct Mesh {
     std::vector<Face> faces;
 };
 
+struct PlyMesh {
+    int material_id;
+    ply::PlyMesh mesh;
+};
+
 struct Triangle {
     int material_id;
     Face indices;
@@ -88,7 +93,7 @@ struct Scene {
     std::vector<Mesh> meshes;
     std::vector<Triangle> triangles;
     std::vector<Sphere> spheres;
-    std::vector<ply::PlyMesh> plyMeshes;
+    std::vector<PlyMesh> plyMeshes;
 
     // Functions
     void loadFromXml(const std::string &filepath);
