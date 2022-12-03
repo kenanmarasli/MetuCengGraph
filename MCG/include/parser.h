@@ -51,6 +51,7 @@ struct Material {
     float phong_exponent;
     Vec3f absorption_coefficient;
     float refraction_index;
+    float absorption_index;
 };
 
 struct Face {
