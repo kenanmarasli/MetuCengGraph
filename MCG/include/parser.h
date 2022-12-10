@@ -63,22 +63,44 @@ struct Face {
 struct Mesh {
     int material_id;
     std::vector<Face> faces;
+    std::vector<int> transformation_ids;
 };
 
 struct PlyMesh {
     int material_id;
     ply::PlyMesh mesh;
+    std::vector<int> transformation_ids;
+};
+
+struct MeshInstance {
+    int base_mesh_id; // mesh, ply mesh or mesh instance
+    bool overrides_material;
+    int material_id;
+    bool resets_transform;
+    std::vector<int> transformation_ids;
+};
+
+enum class TransformationType { Translation, Rotation, Scaling };
+
+struct Transformation {
+    TransformationType type;
+    float x;
+    float y;
+    float z;
+    float theta;
 };
 
 struct Triangle {
     int material_id;
     Face indices;
+    std::vector<int> transformation_ids;
 };
 
 struct Sphere {
     int material_id;
     int center_vertex_id;
     float radius;
+    std::vector<int> transformation_ids;
 };
 
 struct Scene {
@@ -95,6 +117,8 @@ struct Scene {
     std::vector<Triangle> triangles;
     std::vector<Sphere> spheres;
     std::vector<PlyMesh> plyMeshes;
+    std::vector<MeshInstance> meshInstances;
+    std::vector<Transformation> transformations;
 
     // Functions
     void loadFromXml(const std::string &filepath);

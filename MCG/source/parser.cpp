@@ -5,6 +5,41 @@
 #include <sstream>
 #include <stdexcept>
 
+template <typename TObject>
+auto get_transformations(TObject &object, const MCG::Scene &scene,
+                         const char *transformationText) -> void {
+    char s[256];
+    strcpy(s, transformationText);
+    char *transformation = strtok(s, " ");
+    while (transformation) {
+        int transformationID{atoi(&transformation[1])};
+        MCG::TransformationType transformationType;
+        switch (transformation[0]) {
+        case 't':
+            transformationType = MCG::TransformationType::Translation;
+            break;
+        case 'r':
+            transformationType = MCG::TransformationType::Rotation;
+            break;
+        case 's':
+            transformationType = MCG::TransformationType::Scaling;
+            break;
+        }
+        for (int i = 0, typeIndex = 1; i < scene.transformations.size(); i++) {
+            const MCG::Transformation &t = scene.transformations[i];
+            if (t.type == transformationType) {
+                if (typeIndex == transformationID) {
+                    transformationID = i + 1;
+                    break;
+                }
+                ++typeIndex;
+            }
+        }
+        object.transformation_ids.push_back(transformationID);
+        transformation = strtok(NULL, " ");
+    }
+}
+
 void MCG::Scene::loadFromXml(const std::string &filepath) {
     tinyxml2::XMLDocument file;
     std::stringstream stream;
@@ -199,6 +234,41 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
         materials.push_back(material);
         element = element->NextSiblingElement("Material");
     }
+    stream.clear();
+
+    // Get Transformations
+    element = root->FirstChildElement("Transformations");
+    element = element->FirstChildElement("Translation");
+    while (element) {
+        Transformation transformation;
+        stream << element->GetText() << std::endl;
+        transformation.type = TransformationType::Translation;
+        stream >> transformation.x >> transformation.y >> transformation.z;
+        transformations.push_back(transformation);
+        element = element->NextSiblingElement("Translation");
+    }
+    element = root->FirstChildElement("Transformations");
+    element = element->FirstChildElement("Rotation");
+    while (element) {
+        Transformation transformation;
+        stream << element->GetText() << std::endl;
+        transformation.type = TransformationType::Rotation;
+        stream >> transformation.theta >> transformation.x >>
+            transformation.y >> transformation.z;
+        transformations.push_back(transformation);
+        element = element->NextSiblingElement("Rotation");
+    }
+    element = root->FirstChildElement("Transformations");
+    element = element->FirstChildElement("Scaling");
+    while (element) {
+        Transformation transformation;
+        stream << element->GetText() << std::endl;
+        transformation.type = TransformationType::Scaling;
+        stream >> transformation.x >> transformation.y >> transformation.z;
+        transformations.push_back(transformation);
+        element = element->NextSiblingElement("Scaling");
+    }
+    stream.clear();
 
     // Get VertexData
     element = root->FirstChildElement("VertexData");
@@ -229,6 +299,11 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
             PlyMesh plyMesh;
             stream >> plyMesh.material_id;
             ply::parsePly(plyPath.string().c_str(), plyMesh.mesh);
+            child = element->FirstChildElement("Transformations");
+            if (child) {
+                const char *transformationText = child->GetText();
+                get_transformations(plyMesh, *this, transformationText);
+            }
             plyMeshes.push_back(plyMesh);
         } else {
             Mesh mesh;
@@ -239,11 +314,46 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
                 stream >> face.v1_id >> face.v2_id;
                 mesh.faces.push_back(face);
             }
+            child = element->FirstChildElement("Transformations");
+            if (child) {
+                const char *transformationText = child->GetText();
+                get_transformations(mesh, *this, transformationText);
+            }
             meshes.push_back(mesh);
             mesh.faces.clear();
         }
         stream.clear();
         element = element->NextSiblingElement("Mesh");
+    }
+    stream.clear();
+
+    // Get Mesh Instances
+    element = root->FirstChildElement("Objects");
+    element = element->FirstChildElement("MeshInstance");
+    while (element) {
+        MeshInstance meshInstance;
+        const char *baseMeshID = element->Attribute("baseMeshId");
+        stream << baseMeshID << std::endl;
+        stream >> meshInstance.base_mesh_id;
+        meshInstance.resets_transform = false;
+        const char *resetTransformText = element->Attribute("resetTransform");
+        if (resetTransformText) {
+            meshInstance.resets_transform =
+                strcmp(resetTransformText, "true") == 0;
+        }
+        child = element->FirstChildElement("Material");
+        if (child) {
+            stream << child->GetText() << std::endl;
+            stream >> meshInstance.material_id;
+        }
+        child = element->FirstChildElement("Transformations");
+        if (child) {
+            const char *transformationText = child->GetText();
+            get_transformations(meshInstance, *this, transformationText);
+        }
+        meshInstances.push_back(meshInstance);
+
+        element = element->NextSiblingElement("MeshInstance");
     }
     stream.clear();
 
@@ -260,6 +370,12 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
         stream << child->GetText() << std::endl;
         stream >> triangle.indices.v0_id >> triangle.indices.v1_id >>
             triangle.indices.v2_id;
+
+        child = element->FirstChildElement("Transformations");
+        if (child) {
+            const char *transformationText = child->GetText();
+            get_transformations(triangle, *this, transformationText);
+        }
 
         triangles.push_back(triangle);
         element = element->NextSiblingElement("Triangle");
@@ -281,6 +397,12 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
         child = element->FirstChildElement("Radius");
         stream << child->GetText() << std::endl;
         stream >> sphere.radius;
+
+        child = element->FirstChildElement("Transformations");
+        if (child) {
+            const char *transformationText = child->GetText();
+            get_transformations(sphere, *this, transformationText);
+        }
 
         spheres.push_back(sphere);
         element = element->NextSiblingElement("Sphere");
