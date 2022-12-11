@@ -64,14 +64,14 @@ struct Mesh {
     int id;
     int material_id;
     std::vector<Face> faces;
-    std::vector<int> transformation_ids;
+    std::vector<int> transformation_indexes;
 };
 
 struct PlyMesh {
     int id;
     int material_id;
     ply::PlyMesh mesh;
-    std::vector<int> transformation_ids;
+    std::vector<int> transformation_indexes;
 };
 
 struct MeshInstance {
@@ -80,7 +80,7 @@ struct MeshInstance {
     bool overrides_material;
     int material_id;
     bool resets_transform;
-    std::vector<int> transformation_ids;
+    std::vector<int> transformation_indexes;
 };
 
 enum class TransformationType { Translation, Rotation, Scaling };
@@ -96,14 +96,14 @@ struct Transformation {
 struct Triangle {
     int material_id;
     Face indices;
-    std::vector<int> transformation_ids;
+    std::vector<int> transformation_indexes;
 };
 
 struct Sphere {
     int material_id;
     int center_vertex_id;
     float radius;
-    std::vector<int> transformation_ids;
+    std::vector<int> transformation_indexes;
 };
 
 struct Scene {

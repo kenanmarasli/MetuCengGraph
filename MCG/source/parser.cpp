@@ -12,7 +12,7 @@ auto get_transformations(TObject &object, const MCG::Scene &scene,
     strcpy(s, transformationText);
     char *transformation = strtok(s, " ");
     while (transformation) {
-        int transformationID{atoi(&transformation[1])};
+        int transformationIndex{atoi(&transformation[1])};
         MCG::TransformationType transformationType;
         switch (transformation[0]) {
         case 't':
@@ -28,14 +28,14 @@ auto get_transformations(TObject &object, const MCG::Scene &scene,
         for (int i = 0, typeIndex = 1; i < scene.transformations.size(); i++) {
             const MCG::Transformation &t = scene.transformations[i];
             if (t.type == transformationType) {
-                if (typeIndex == transformationID) {
-                    transformationID = i + 1;
+                if (typeIndex == transformationIndex) {
+                    transformationIndex = i;
                     break;
                 }
                 ++typeIndex;
             }
         }
-        object.transformation_ids.push_back(transformationID);
+        object.transformation_indexes.push_back(transformationIndex);
         transformation = strtok(NULL, " ");
     }
 }
@@ -360,6 +360,9 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
         if (child) {
             stream << child->GetText() << std::endl;
             stream >> meshInstance.material_id;
+            meshInstance.overrides_material = true;
+        } else {
+            meshInstance.overrides_material = false;
         }
         child = element->FirstChildElement("Transformations");
         if (child) {
