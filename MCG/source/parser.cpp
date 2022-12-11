@@ -312,6 +312,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
                 get_transformations(plyMesh, *this, transformationText);
             }
             plyMeshes.push_back(plyMesh);
+            plyMesh.transformation_indexes.clear();
         } else {
             Mesh mesh;
             mesh.id = meshID;
@@ -329,6 +330,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
             }
             meshes.push_back(mesh);
             mesh.faces.clear();
+            mesh.transformation_indexes.clear();
         }
         stream.clear();
         element = element->NextSiblingElement("Mesh");
@@ -370,6 +372,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
             get_transformations(meshInstance, *this, transformationText);
         }
         meshInstances.push_back(meshInstance);
+        meshInstance.transformation_indexes.clear();
 
         element = element->NextSiblingElement("MeshInstance");
     }
@@ -396,6 +399,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
         }
 
         triangles.push_back(triangle);
+        triangle.transformation_indexes.clear();
         element = element->NextSiblingElement("Triangle");
     }
 
@@ -423,6 +427,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
         }
 
         spheres.push_back(sphere);
+        sphere.transformation_indexes.clear();
         element = element->NextSiblingElement("Sphere");
     }
 }
