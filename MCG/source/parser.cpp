@@ -284,6 +284,12 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
     element = root->FirstChildElement("Objects");
     element = element->FirstChildElement("Mesh");
     while (element) {
+        int meshID{};
+        const char *meshIDText = element->Attribute("id");
+        if (meshIDText) {
+            stream << meshIDText << std::endl;
+            stream >> meshID;
+        }
         child = element->FirstChildElement("Material");
         stream << child->GetText() << std::endl;
 
@@ -297,6 +303,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
                 plyPath = path;
             }
             PlyMesh plyMesh;
+            plyMesh.id = meshID;
             stream >> plyMesh.material_id;
             ply::parsePly(plyPath.string().c_str(), plyMesh.mesh);
             child = element->FirstChildElement("Transformations");
@@ -307,6 +314,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
             plyMeshes.push_back(plyMesh);
         } else {
             Mesh mesh;
+            mesh.id = meshID;
             stream >> mesh.material_id;
             stream << child->GetText() << std::endl;
             Face face;
@@ -332,6 +340,13 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
     element = element->FirstChildElement("MeshInstance");
     while (element) {
         MeshInstance meshInstance;
+        int meshInstanceID{};
+        const char *meshInstanceIDText = element->Attribute("id");
+        if (meshInstanceIDText) {
+            stream << meshInstanceIDText << std::endl;
+            stream >> meshInstanceID;
+        }
+        meshInstance.id = meshInstanceID;
         const char *baseMeshID = element->Attribute("baseMeshId");
         stream << baseMeshID << std::endl;
         stream >> meshInstance.base_mesh_id;

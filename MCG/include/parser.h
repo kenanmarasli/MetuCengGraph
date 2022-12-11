@@ -61,18 +61,21 @@ struct Face {
 };
 
 struct Mesh {
+    int id;
     int material_id;
     std::vector<Face> faces;
     std::vector<int> transformation_ids;
 };
 
 struct PlyMesh {
+    int id;
     int material_id;
     ply::PlyMesh mesh;
     std::vector<int> transformation_ids;
 };
 
 struct MeshInstance {
+    int id;
     int base_mesh_id; // mesh, ply mesh or mesh instance
     bool overrides_material;
     int material_id;
