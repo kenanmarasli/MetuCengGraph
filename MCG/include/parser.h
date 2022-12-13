@@ -33,6 +33,7 @@ struct Camera {
     float near_distance;
     int image_width, image_height;
     std::string image_name;
+    int number_of_samples;
 };
 
 struct PointLight {

@@ -109,6 +109,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
             stream >> camera.near_plane.x >> camera.near_plane.y >>
                 camera.near_plane.z >> camera.near_plane.w;
         }
+
         child = element->FirstChildElement("Position");
         stream << child->GetText() << std::endl;
         child = element->FirstChildElement("Up");
@@ -125,6 +126,14 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
         stream >> camera.near_distance;
         stream >> camera.image_width >> camera.image_height;
         stream >> camera.image_name;
+
+        child = element->FirstChildElement("NumSamples");
+        if (child) {
+            stream << child->GetText() << std::endl;
+            stream >> camera.number_of_samples;
+        } else {
+            camera.number_of_samples = 1;
+        }
 
         cameras.push_back(camera);
         element = element->NextSiblingElement("Camera");
