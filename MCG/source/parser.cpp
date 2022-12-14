@@ -178,6 +178,32 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
         point_lights.push_back(point_light);
         element = element->NextSiblingElement("PointLight");
     }
+    stream.clear();
+    element = root->FirstChildElement("Lights");
+    element = element->FirstChildElement("AreaLight");
+    while (element) {
+        child = element->FirstChildElement("Position");
+        stream << child->GetText() << std::endl;
+        child = element->FirstChildElement("Radiance");
+        stream << child->GetText() << std::endl;
+        child = element->FirstChildElement("Normal");
+        stream << child->GetText() << std::endl;
+        child = element->FirstChildElement("Size");
+        stream << child->GetText() << std::endl;
+
+        AreaLight area_light;
+        stream >> area_light.position.x >> area_light.position.y >>
+            area_light.position.z;
+        stream >> area_light.radiance.x >> area_light.radiance.y >>
+            area_light.radiance.z;
+        stream >> area_light.normal.x >> area_light.normal.y >>
+            area_light.normal.z;
+        stream >> area_light.extent;
+
+        area_lights.push_back(area_light);
+        element = element->NextSiblingElement("AreaLight");
+    }
+    stream.clear();
 
     // Get Materials
     element = root->FirstChildElement("Materials");
