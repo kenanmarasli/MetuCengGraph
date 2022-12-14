@@ -247,37 +247,39 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
 
     // Get Transformations
     element = root->FirstChildElement("Transformations");
-    element = element->FirstChildElement("Translation");
-    while (element) {
-        Transformation transformation;
-        stream << element->GetText() << std::endl;
-        transformation.type = TransformationType::Translation;
-        stream >> transformation.x >> transformation.y >> transformation.z;
-        transformations.push_back(transformation);
-        element = element->NextSiblingElement("Translation");
+    if (element) {
+        element = element->FirstChildElement("Translation");
+        while (element) {
+            Transformation transformation;
+            stream << element->GetText() << std::endl;
+            transformation.type = TransformationType::Translation;
+            stream >> transformation.x >> transformation.y >> transformation.z;
+            transformations.push_back(transformation);
+            element = element->NextSiblingElement("Translation");
+        }
+        element = root->FirstChildElement("Transformations");
+        element = element->FirstChildElement("Rotation");
+        while (element) {
+            Transformation transformation;
+            stream << element->GetText() << std::endl;
+            transformation.type = TransformationType::Rotation;
+            stream >> transformation.theta >> transformation.x >>
+                transformation.y >> transformation.z;
+            transformations.push_back(transformation);
+            element = element->NextSiblingElement("Rotation");
+        }
+        element = root->FirstChildElement("Transformations");
+        element = element->FirstChildElement("Scaling");
+        while (element) {
+            Transformation transformation;
+            stream << element->GetText() << std::endl;
+            transformation.type = TransformationType::Scaling;
+            stream >> transformation.x >> transformation.y >> transformation.z;
+            transformations.push_back(transformation);
+            element = element->NextSiblingElement("Scaling");
+        }
+        stream.clear();
     }
-    element = root->FirstChildElement("Transformations");
-    element = element->FirstChildElement("Rotation");
-    while (element) {
-        Transformation transformation;
-        stream << element->GetText() << std::endl;
-        transformation.type = TransformationType::Rotation;
-        stream >> transformation.theta >> transformation.x >>
-            transformation.y >> transformation.z;
-        transformations.push_back(transformation);
-        element = element->NextSiblingElement("Rotation");
-    }
-    element = root->FirstChildElement("Transformations");
-    element = element->FirstChildElement("Scaling");
-    while (element) {
-        Transformation transformation;
-        stream << element->GetText() << std::endl;
-        transformation.type = TransformationType::Scaling;
-        stream >> transformation.x >> transformation.y >> transformation.z;
-        transformations.push_back(transformation);
-        element = element->NextSiblingElement("Scaling");
-    }
-    stream.clear();
 
     // Get VertexData
     element = root->FirstChildElement("VertexData");
