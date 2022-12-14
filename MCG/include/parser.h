@@ -34,6 +34,9 @@ struct Camera {
     int image_width, image_height;
     std::string image_name;
     int number_of_samples;
+    bool has_depth_of_field{false};
+    float aperture_size;
+    float focus_distance;
 };
 
 struct PointLight {

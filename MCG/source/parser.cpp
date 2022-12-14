@@ -135,6 +135,24 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
             camera.number_of_samples = 1;
         }
 
+        child = element->FirstChildElement("ApertureSize");
+        if (child) {
+            stream << child->GetText() << std::endl;
+            stream >> camera.aperture_size;
+            camera.has_depth_of_field = true;
+        } else {
+            camera.has_depth_of_field = false;
+        }
+
+        child = element->FirstChildElement("FocusDistance");
+        if (child) {
+            stream << child->GetText() << std::endl;
+            stream >> camera.focus_distance;
+            camera.has_depth_of_field = true;
+        } else {
+            camera.has_depth_of_field = false;
+        }
+
         cameras.push_back(camera);
         element = element->NextSiblingElement("Camera");
     }
