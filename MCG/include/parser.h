@@ -63,6 +63,7 @@ struct Material {
     Vec3f absorption_coefficient;
     float refraction_index;
     float absorption_index;
+    float roughness;
 };
 
 struct Face {

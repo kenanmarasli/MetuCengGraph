@@ -269,6 +269,12 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
         } else {
             stream << "1" << std::endl;
         }
+        child = element->FirstChildElement("Roughness");
+        if (child) {
+            stream << child->GetText() << std::endl;
+        } else {
+            stream << "0" << std::endl;
+        }
 
         stream >> material.ambient.x >> material.ambient.y >>
             material.ambient.z;
@@ -283,6 +289,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
             material.absorption_coefficient.z;
         stream >> material.refraction_index;
         stream >> material.absorption_index;
+        stream >> material.roughness;
 
         materials.push_back(material);
         element = element->NextSiblingElement("Material");
