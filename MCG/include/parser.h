@@ -76,6 +76,8 @@ struct Mesh {
     int material_id;
     std::vector<Face> faces;
     std::vector<int> transformation_indexes;
+    bool has_motion{false};
+    Vec3f motion;
 };
 
 struct PlyMesh {
@@ -83,6 +85,8 @@ struct PlyMesh {
     int material_id;
     ply::PlyMesh mesh;
     std::vector<int> transformation_indexes;
+    bool has_motion{false};
+    Vec3f motion;
 };
 
 struct MeshInstance {
@@ -92,6 +96,8 @@ struct MeshInstance {
     int material_id;
     bool resets_transform;
     std::vector<int> transformation_indexes;
+    bool has_motion{false};
+    Vec3f motion;
 };
 
 enum class TransformationType { Translation, Rotation, Scaling };
@@ -108,6 +114,8 @@ struct Triangle {
     int material_id;
     Face indices;
     std::vector<int> transformation_indexes;
+    bool has_motion{false};
+    Vec3f motion;
 };
 
 struct Sphere {
@@ -115,6 +123,8 @@ struct Sphere {
     int center_vertex_id;
     float radius;
     std::vector<int> transformation_indexes;
+    bool has_motion{false};
+    Vec3f motion;
 };
 
 struct Scene {

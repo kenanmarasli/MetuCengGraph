@@ -366,6 +366,13 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
                 const char *transformationText = child->GetText();
                 get_transformations(plyMesh, *this, transformationText);
             }
+            child = element->FirstChildElement("MotionBlur");
+            if (child) {
+                stream << child->GetText() << std::endl;
+                stream >> plyMesh.motion.x >> plyMesh.motion.y >>
+                    plyMesh.motion.z;
+                plyMesh.has_motion = true;
+            }
             plyMeshes.push_back(plyMesh);
             plyMesh.transformation_indexes.clear();
         } else {
@@ -382,6 +389,12 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
             if (child) {
                 const char *transformationText = child->GetText();
                 get_transformations(mesh, *this, transformationText);
+            }
+            child = element->FirstChildElement("MotionBlur");
+            if (child) {
+                stream << child->GetText() << std::endl;
+                stream >> mesh.motion.x >> mesh.motion.y >> mesh.motion.z;
+                mesh.has_motion = true;
             }
             meshes.push_back(mesh);
             mesh.faces.clear();
@@ -426,6 +439,13 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
             const char *transformationText = child->GetText();
             get_transformations(meshInstance, *this, transformationText);
         }
+        child = element->FirstChildElement("MotionBlur");
+        if (child) {
+            stream << child->GetText() << std::endl;
+            stream >> meshInstance.motion.x >> meshInstance.motion.y >>
+                meshInstance.motion.z;
+            meshInstance.has_motion = true;
+        }
         meshInstances.push_back(meshInstance);
         meshInstance.transformation_indexes.clear();
 
@@ -452,7 +472,13 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
             const char *transformationText = child->GetText();
             get_transformations(triangle, *this, transformationText);
         }
-
+        child = element->FirstChildElement("MotionBlur");
+        if (child) {
+            stream << child->GetText() << std::endl;
+            stream >> triangle.motion.x >> triangle.motion.y >>
+                triangle.motion.z;
+            triangle.has_motion = true;
+        }
         triangles.push_back(triangle);
         triangle.transformation_indexes.clear();
         element = element->NextSiblingElement("Triangle");
@@ -480,7 +506,12 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
             const char *transformationText = child->GetText();
             get_transformations(sphere, *this, transformationText);
         }
-
+        child = element->FirstChildElement("MotionBlur");
+        if (child) {
+            stream << child->GetText() << std::endl;
+            stream >> sphere.motion.x >> sphere.motion.y >> sphere.motion.z;
+            sphere.has_motion = true;
+        }
         spheres.push_back(sphere);
         sphere.transformation_indexes.clear();
         element = element->NextSiblingElement("Sphere");
