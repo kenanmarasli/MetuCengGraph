@@ -12,7 +12,7 @@
             <NearDistance>1</NearDistance>
             <ImageResolution>800 800</ImageResolution>
             <NumSamples>36</NumSamples>
-            <ImageName>metal_glass_plates.png</ImageName>
+            <ImageName>metal_glass_plates_rough.png</ImageName>
         </Camera>
     </Cameras>
 
