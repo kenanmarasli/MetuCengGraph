@@ -1,0 +1,16 @@
+In this homework you are expected to add texturing capabilities to your ray tracers. We will be using textures for five main purposes:
+
+    Background textures for rays not hitting any objects (replace_background)
+    Diffuse reflectance maps (replace_kd, blend_kd) for objects
+    To disable shading and simply paste the texture color on an object (replace_all)
+    Normals maps (replace_normal)
+    Bump maps (bump_normal)
+
+We will be dealing with two types of textures:
+
+    Image textures (mostly PNG and JPEG files -- you can use any image reader library)
+    Perlin noise (generated for each point on the fly)
+
+The XML files should be generally self-explanatory. Objects may have up to two textures associated with them. One texture controls the shading and the other normal perturbation. For example, a single object cannot have both normal map and bump map. It can have a reflectance map and a normal map, or a reflectance map and a bump map and so on.
+
+Please carefully watch the videos and ask questions in the forum when needed.
