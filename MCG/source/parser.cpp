@@ -306,8 +306,13 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
     }
     while (element) {
         Image image;
-        stream << element->GetText() << std::endl;
-        stream >> image.path;
+        std::filesystem::path imagePath{element->GetText()};
+        if (imagePath.is_relative()) {
+            std::filesystem::path path{filepath};
+            path.replace_filename(imagePath);
+            imagePath = path;
+        }
+        image.path = imagePath.string();
         images.push_back(image);
         element = element->NextSiblingElement("Image");
     }
