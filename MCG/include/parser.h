@@ -79,6 +79,7 @@ struct Mesh {
     std::vector<int> transformation_indexes;
     bool has_motion{false};
     Vec3f motion;
+    std::vector<int> texture_ids;
 };
 
 struct PlyMesh {
@@ -88,6 +89,7 @@ struct PlyMesh {
     std::vector<int> transformation_indexes;
     bool has_motion{false};
     Vec3f motion;
+    std::vector<int> texture_ids;
 };
 
 struct MeshInstance {
@@ -99,6 +101,7 @@ struct MeshInstance {
     std::vector<int> transformation_indexes;
     bool has_motion{false};
     Vec3f motion;
+    std::vector<int> texture_ids;
 };
 
 enum class TransformationType { Translation, Rotation, Scaling };
@@ -111,12 +114,36 @@ struct Transformation {
     float theta;
 };
 
+struct Image {
+    std::string path;
+};
+
+enum class DecalMode {
+    ReplaceKD,
+    BlendKD,
+    ReplaceKS,
+    ReplaceBackground,
+    ReplaceNormal,
+    BumpNormal,
+    ReplaceAll
+};
+
+enum class Interpolation { NearestNeighbour, Bilinear };
+
+struct TextureMap {
+    int image_id;
+    DecalMode decalMode;
+    Interpolation interpolation;
+    int normalizer;
+};
+
 struct Triangle {
     int material_id;
     Face indices;
     std::vector<int> transformation_indexes;
     bool has_motion{false};
     Vec3f motion;
+    std::vector<int> texture_ids;
 };
 
 struct Sphere {
@@ -126,6 +153,7 @@ struct Sphere {
     std::vector<int> transformation_indexes;
     bool has_motion{false};
     Vec3f motion;
+    std::vector<int> texture_ids;
 };
 
 struct Scene {
@@ -145,6 +173,8 @@ struct Scene {
     std::vector<PlyMesh> plyMeshes;
     std::vector<MeshInstance> meshInstances;
     std::vector<Transformation> transformations;
+    std::vector<Image> images;
+    std::vector<TextureMap> textureMaps;
 
     // Functions
     void loadFromXml(const std::string &filepath);

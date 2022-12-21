@@ -296,6 +296,69 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
     }
     stream.clear();
 
+    // Get Images
+    element = root->FirstChildElement("Textures");
+    if (element) {
+        element = element->FirstChildElement("Images");
+        if (element) {
+            element = element->FirstChildElement("Image");
+        }
+    }
+    while (element) {
+        Image image;
+        stream << element->GetText() << std::endl;
+        stream >> image.path;
+        images.push_back(image);
+        element = element->NextSiblingElement("Image");
+    }
+    stream.clear();
+
+    // Get Texture Maps
+    element = root->FirstChildElement("Textures");
+    if (element) {
+        element = element->FirstChildElement("TextureMap");
+    }
+    while (element) {
+        TextureMap textureMap;
+        child = element->FirstChildElement("ImageId");
+        stream << child->GetText() << std::endl;
+        stream >> textureMap.image_id;
+        child = element->FirstChildElement("DecalMode");
+        std::string decalMode{child->GetText()};
+        if (decalMode == "replace_kd") {
+            textureMap.decalMode = DecalMode::ReplaceKD;
+        } else if (decalMode == "blend_kd") {
+            textureMap.decalMode = DecalMode::BlendKD;
+        } else if (decalMode == "replace_ks") {
+            textureMap.decalMode = DecalMode::ReplaceKS;
+        } else if (decalMode == "replace_background") {
+            textureMap.decalMode = DecalMode::ReplaceBackground;
+        } else if (decalMode == "replace_normal") {
+            textureMap.decalMode = DecalMode::ReplaceNormal;
+        } else if (decalMode == "bump_normal") {
+            textureMap.decalMode = DecalMode::BumpNormal;
+        } else {
+            textureMap.decalMode = DecalMode::ReplaceAll;
+        }
+        child = element->FirstChildElement("Interpolation");
+        std::string interpolation{child->GetText()};
+        if (interpolation == "nearest") {
+            textureMap.interpolation = Interpolation::NearestNeighbour;
+        } else {
+            textureMap.interpolation = Interpolation::Bilinear;
+        }
+        child = element->FirstChildElement("Normalizer");
+        if (child) {
+            stream << child->GetText() << std::endl;
+            stream >> textureMap.normalizer;
+        } else {
+            textureMap.normalizer = 255;
+        }
+        textureMaps.push_back(textureMap);
+        element = element->NextSiblingElement("TextureMap");
+    }
+    stream.clear();
+
     // Get Transformations
     element = root->FirstChildElement("Transformations");
     if (element) {
