@@ -160,8 +160,10 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
     // Get Lights
     element = root->FirstChildElement("Lights");
     auto child = element->FirstChildElement("AmbientLight");
-    stream << child->GetText() << std::endl;
-    stream >> ambient_light.x >> ambient_light.y >> ambient_light.z;
+    if (child) {
+        stream << child->GetText() << std::endl;
+        stream >> ambient_light.x >> ambient_light.y >> ambient_light.z;
+    }
     element = element->FirstChildElement("PointLight");
     PointLight point_light;
     while (element) {
