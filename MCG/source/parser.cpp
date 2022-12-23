@@ -466,7 +466,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
             if (child) {
                 int texture_id;
                 stream << child->GetText() << std::endl;
-                while (!(stream >> texture_id).eof()) {
+                while (stream >> texture_id) {
                     plyMesh.texture_ids.push_back(texture_id);
                 }
                 stream.clear();
@@ -484,6 +484,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
                 stream >> face.v1_id >> face.v2_id;
                 mesh.faces.push_back(face);
             }
+            stream.clear();
             child = element->FirstChildElement("Transformations");
             if (child) {
                 const char *transformationText = child->GetText();
@@ -499,7 +500,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
             if (child) {
                 int texture_id;
                 stream << child->GetText() << std::endl;
-                while (!(stream >> texture_id).eof()) {
+                while (stream >> texture_id) {
                     mesh.texture_ids.push_back(texture_id);
                 }
                 stream.clear();
@@ -559,7 +560,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
         if (child) {
             int texture_id;
             stream << child->GetText() << std::endl;
-            while (!(stream >> texture_id).eof()) {
+            while (stream >> texture_id) {
                 meshInstance.texture_ids.push_back(texture_id);
             }
             stream.clear();
@@ -601,7 +602,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
         if (child) {
             int texture_id;
             stream << child->GetText() << std::endl;
-            while (!(stream >> texture_id).eof()) {
+            while (stream >> texture_id) {
                 triangle.texture_ids.push_back(texture_id);
             }
             stream.clear();
@@ -644,7 +645,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
         if (child) {
             int texture_id;
             stream << child->GetText() << std::endl;
-            while (!(stream >> texture_id).eof()) {
+            while (stream >> texture_id) {
                 sphere.texture_ids.push_back(texture_id);
             }
             stream.clear();
