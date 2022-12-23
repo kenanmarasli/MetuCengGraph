@@ -448,8 +448,18 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
                     plyMesh.motion.z;
                 plyMesh.has_motion = true;
             }
+            child = element->FirstChildElement("Textures");
+            if (child) {
+                int texture_id;
+                stream << child->GetText() << std::endl;
+                while (!(stream >> texture_id).eof()) {
+                    plyMesh.texture_ids.push_back(texture_id);
+                }
+                stream.clear();
+            }
             plyMeshes.push_back(plyMesh);
             plyMesh.transformation_indexes.clear();
+            plyMesh.texture_ids.clear();
         } else {
             Mesh mesh;
             mesh.id = meshID;
@@ -471,9 +481,19 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
                 stream >> mesh.motion.x >> mesh.motion.y >> mesh.motion.z;
                 mesh.has_motion = true;
             }
+            child = element->FirstChildElement("Textures");
+            if (child) {
+                int texture_id;
+                stream << child->GetText() << std::endl;
+                while (!(stream >> texture_id).eof()) {
+                    mesh.texture_ids.push_back(texture_id);
+                }
+                stream.clear();
+            }
             meshes.push_back(mesh);
             mesh.faces.clear();
             mesh.transformation_indexes.clear();
+            mesh.texture_ids.clear();
         }
         stream.clear();
         element = element->NextSiblingElement("Mesh");
@@ -521,9 +541,18 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
                 meshInstance.motion.z;
             meshInstance.has_motion = true;
         }
+        child = element->FirstChildElement("Textures");
+        if (child) {
+            int texture_id;
+            stream << child->GetText() << std::endl;
+            while (!(stream >> texture_id).eof()) {
+                meshInstance.texture_ids.push_back(texture_id);
+            }
+            stream.clear();
+        }
         meshInstances.push_back(meshInstance);
         meshInstance.transformation_indexes.clear();
-
+        meshInstance.texture_ids.clear();
         element = element->NextSiblingElement("MeshInstance");
     }
     stream.clear();
@@ -554,8 +583,18 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
                 triangle.motion.z;
             triangle.has_motion = true;
         }
+        child = element->FirstChildElement("Textures");
+        if (child) {
+            int texture_id;
+            stream << child->GetText() << std::endl;
+            while (!(stream >> texture_id).eof()) {
+                triangle.texture_ids.push_back(texture_id);
+            }
+            stream.clear();
+        }
         triangles.push_back(triangle);
         triangle.transformation_indexes.clear();
+        triangle.texture_ids.clear();
         element = element->NextSiblingElement("Triangle");
     }
 
@@ -587,8 +626,18 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
             stream >> sphere.motion.x >> sphere.motion.y >> sphere.motion.z;
             sphere.has_motion = true;
         }
+        child = element->FirstChildElement("Textures");
+        if (child) {
+            int texture_id;
+            stream << child->GetText() << std::endl;
+            while (!(stream >> texture_id).eof()) {
+                sphere.texture_ids.push_back(texture_id);
+            }
+            stream.clear();
+        }
         spheres.push_back(sphere);
         sphere.transformation_indexes.clear();
+        sphere.texture_ids.clear();
         element = element->NextSiblingElement("Sphere");
     }
 }
