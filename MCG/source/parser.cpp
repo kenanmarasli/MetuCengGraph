@@ -410,6 +410,18 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
     }
     stream.clear();
 
+    // Get Texture Coordinates
+    element = root->FirstChildElement("TexCoordData");
+    if (element) {
+        stream << element->GetText() << std::endl;
+        Vec2f texCoord;
+        while (!(stream >> texCoord.x).eof()) {
+            stream >> texCoord.y;
+            texture_coordinates.push_back(texCoord);
+        }
+        stream.clear();
+    }
+
     // Get Meshes
     element = root->FirstChildElement("Objects");
     element = element->FirstChildElement("Mesh");

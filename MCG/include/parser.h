@@ -8,6 +8,10 @@
 namespace MCG {
 // Notice that all the structures are as simple as possible
 // so that you are not enforced to adopt any style or design.
+struct Vec2f {
+    float x, y;
+};
+
 struct Vec3f {
     float x, y, z;
 };
@@ -167,6 +171,7 @@ struct Scene {
     std::vector<AreaLight> area_lights;
     std::vector<Material> materials;
     std::vector<Vec3f> vertex_data;
+    std::vector<Vec2f> texture_coordinates;
     std::vector<Mesh> meshes;
     std::vector<Triangle> triangles;
     std::vector<Sphere> spheres;
