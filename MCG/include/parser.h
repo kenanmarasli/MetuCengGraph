@@ -131,14 +131,21 @@ enum class DecalMode {
     BumpNormal,
     ReplaceAll
 };
-
 enum class Interpolation { NearestNeighbour, Bilinear };
+enum class TextureType { Image, Perlin, Checker };
+enum class NoiseConversion { Abs, Linear };
 
 struct TextureMap {
     int image_id;
-    DecalMode decalMode;
+    DecalMode decal_mode;
     Interpolation interpolation;
+    TextureType type;
+    NoiseConversion noise_conversion;
     int normalizer;
+    float scale;
+    float offset;
+    Vec3f black;
+    Vec3f white;
 };
 
 struct Triangle {

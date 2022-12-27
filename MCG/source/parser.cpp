@@ -327,40 +327,88 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
     }
     while (element) {
         TextureMap textureMap;
-        child = element->FirstChildElement("ImageId");
-        stream << child->GetText() << std::endl;
-        stream >> textureMap.image_id;
+        const char *textureTypeText = element->Attribute("type");
+        if (!textureTypeText) {
+            textureMap.type = TextureType::Image;
+        } else {
+            std::string textureType{textureTypeText};
+            if (textureType == "perlin") {
+                textureMap.type = TextureType::Perlin;
+            } else if (textureType == "checkerboard") {
+                textureMap.type = TextureType::Checker;
+            } else {
+                textureMap.type = TextureType::Image;
+            }
+        }
+        switch (textureMap.type) {
+        case TextureType::Image: {
+            child = element->FirstChildElement("ImageId");
+            stream << child->GetText() << std::endl;
+            stream >> textureMap.image_id;
+            child = element->FirstChildElement("Interpolation");
+            std::string interpolation = {child->GetText()};
+            if (interpolation == "nearest") {
+                textureMap.interpolation = Interpolation::NearestNeighbour;
+            } else {
+                textureMap.interpolation = Interpolation::Bilinear;
+            }
+            child = element->FirstChildElement("Normalizer");
+            if (child) {
+                stream << child->GetText() << std::endl;
+                stream >> textureMap.normalizer;
+            } else {
+                textureMap.normalizer = 255;
+            }
+        } break;
+        case TextureType::Perlin: {
+            child = element->FirstChildElement("NoiseConversion");
+            const char *noiseConversionText = child->GetText();
+            std::string noiseConversion{noiseConversionText};
+            if (noiseConversion == "absval") {
+                textureMap.noise_conversion = NoiseConversion::Abs;
+            } else {
+                textureMap.noise_conversion = NoiseConversion::Linear;
+            }
+            child = element->FirstChildElement("NoiseScale");
+            stream << child->GetText() << std::endl;
+            stream >> textureMap.scale;
+        } break;
+        case TextureType::Checker: {
+            child = element->FirstChildElement("Scale");
+            stream << child->GetText() << std::endl;
+            stream >> textureMap.scale;
+            child = element->FirstChildElement("Offset");
+            stream << child->GetText() << std::endl;
+            stream >> textureMap.offset;
+            child = element->FirstChildElement("BlackColor");
+            stream << child->GetText() << std::endl;
+            stream >> textureMap.black.x >> textureMap.black.y >>
+                textureMap.black.z;
+            child = element->FirstChildElement("WhiteColor");
+            stream << child->GetText() << std::endl;
+            stream >> textureMap.white.x >> textureMap.white.y >>
+                textureMap.white.z;
+        } break;
+        }
+
         child = element->FirstChildElement("DecalMode");
         std::string decalMode{child->GetText()};
         if (decalMode == "replace_kd") {
-            textureMap.decalMode = DecalMode::ReplaceKD;
+            textureMap.decal_mode = DecalMode::ReplaceKD;
         } else if (decalMode == "blend_kd") {
-            textureMap.decalMode = DecalMode::BlendKD;
+            textureMap.decal_mode = DecalMode::BlendKD;
         } else if (decalMode == "replace_ks") {
-            textureMap.decalMode = DecalMode::ReplaceKS;
+            textureMap.decal_mode = DecalMode::ReplaceKS;
         } else if (decalMode == "replace_background") {
-            textureMap.decalMode = DecalMode::ReplaceBackground;
+            textureMap.decal_mode = DecalMode::ReplaceBackground;
         } else if (decalMode == "replace_normal") {
-            textureMap.decalMode = DecalMode::ReplaceNormal;
+            textureMap.decal_mode = DecalMode::ReplaceNormal;
         } else if (decalMode == "bump_normal") {
-            textureMap.decalMode = DecalMode::BumpNormal;
+            textureMap.decal_mode = DecalMode::BumpNormal;
         } else {
-            textureMap.decalMode = DecalMode::ReplaceAll;
+            textureMap.decal_mode = DecalMode::ReplaceAll;
         }
-        child = element->FirstChildElement("Interpolation");
-        std::string interpolation{child->GetText()};
-        if (interpolation == "nearest") {
-            textureMap.interpolation = Interpolation::NearestNeighbour;
-        } else {
-            textureMap.interpolation = Interpolation::Bilinear;
-        }
-        child = element->FirstChildElement("Normalizer");
-        if (child) {
-            stream << child->GetText() << std::endl;
-            stream >> textureMap.normalizer;
-        } else {
-            textureMap.normalizer = 255;
-        }
+
         textureMaps.push_back(textureMap);
         element = element->NextSiblingElement("TextureMap");
     }
