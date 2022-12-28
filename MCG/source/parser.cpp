@@ -355,13 +355,13 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
                 } else {
                     textureMap.interpolation = Interpolation::Bilinear;
                 }
-                child = element->FirstChildElement("Normalizer");
-                if (child) {
-                    stream << child->GetText() << std::endl;
-                    stream >> textureMap.normalizer;
-                } else {
-                    textureMap.normalizer = 255;
-                }
+            }
+            child = element->FirstChildElement("Normalizer");
+            if (child) {
+                stream << child->GetText() << std::endl;
+                stream >> textureMap.normalizer;
+            } else {
+                textureMap.normalizer = 255;
             }
         } break;
         case TextureType::Perlin: {
@@ -411,6 +411,14 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
             textureMap.decal_mode = DecalMode::BumpNormal;
         } else {
             textureMap.decal_mode = DecalMode::ReplaceAll;
+        }
+
+        child = element->FirstChildElement("BumpFactor");
+        if (!child) {
+            textureMap.bump_factor = 1.F;
+        } else {
+            stream << child->GetText() << std::endl;
+            stream >> textureMap.bump_factor;
         }
 
         textureMaps.push_back(textureMap);

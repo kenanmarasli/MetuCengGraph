@@ -146,6 +146,7 @@ struct TextureMap {
     float offset;
     Vec3f black;
     Vec3f white;
+    float bump_factor;
 };
 
 struct Triangle {
