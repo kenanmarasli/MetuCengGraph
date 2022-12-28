@@ -346,18 +346,22 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
             stream << child->GetText() << std::endl;
             stream >> textureMap.image_id;
             child = element->FirstChildElement("Interpolation");
-            std::string interpolation = {child->GetText()};
-            if (interpolation == "nearest") {
-                textureMap.interpolation = Interpolation::NearestNeighbour;
-            } else {
+            if (!child) {
                 textureMap.interpolation = Interpolation::Bilinear;
-            }
-            child = element->FirstChildElement("Normalizer");
-            if (child) {
-                stream << child->GetText() << std::endl;
-                stream >> textureMap.normalizer;
             } else {
-                textureMap.normalizer = 255;
+                std::string interpolation = {child->GetText()};
+                if (interpolation == "nearest") {
+                    textureMap.interpolation = Interpolation::NearestNeighbour;
+                } else {
+                    textureMap.interpolation = Interpolation::Bilinear;
+                }
+                child = element->FirstChildElement("Normalizer");
+                if (child) {
+                    stream << child->GetText() << std::endl;
+                    stream >> textureMap.normalizer;
+                } else {
+                    textureMap.normalizer = 255;
+                }
             }
         } break;
         case TextureType::Perlin: {
