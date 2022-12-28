@@ -374,8 +374,12 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
                 textureMap.noise_conversion = NoiseConversion::Linear;
             }
             child = element->FirstChildElement("NoiseScale");
-            stream << child->GetText() << std::endl;
-            stream >> textureMap.scale;
+            if (!child) {
+                textureMap.scale = 1.F;
+            } else {
+                stream << child->GetText() << std::endl;
+                stream >> textureMap.scale;
+            }
         } break;
         case TextureType::Checker: {
             child = element->FirstChildElement("Scale");
