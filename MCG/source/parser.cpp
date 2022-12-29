@@ -540,12 +540,21 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
             plyMesh.texture_ids.clear();
         } else {
             Mesh mesh;
+            int vertexOffset{0};
+            const char *vertexOffsetText = child->Attribute("vertexOffset");
+            if (vertexOffsetText) {
+                stream << vertexOffsetText << std::endl;
+                stream >> vertexOffset;
+            }
             mesh.id = meshID;
             stream >> mesh.material_id;
             stream << child->GetText() << std::endl;
             Face face;
             while (!(stream >> face.v0_id).eof()) {
                 stream >> face.v1_id >> face.v2_id;
+                face.v0_id += vertexOffset;
+                face.v1_id += vertexOffset;
+                face.v2_id += vertexOffset;
                 mesh.faces.push_back(face);
             }
             stream.clear();
