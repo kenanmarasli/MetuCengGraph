@@ -24,6 +24,9 @@ auto get_transformations(TObject &object, const MCG::Scene &scene,
         case 's':
             transformationType = MCG::TransformationType::Scaling;
             break;
+        case 'c':
+            transformationType = MCG::TransformationType::Composite;
+            break;
         }
         for (int i = 0, typeIndex = 1; i < scene.transformations.size(); i++) {
             const MCG::Transformation &t = scene.transformations[i];
@@ -462,6 +465,20 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
             stream >> transformation.x >> transformation.y >> transformation.z;
             transformations.push_back(transformation);
             element = element->NextSiblingElement("Scaling");
+        }
+        element = root->FirstChildElement("Transformations");
+        element = element->FirstChildElement("Composite");
+        while (element) {
+            Transformation transformation;
+            stream << element->GetText() << std::endl;
+            transformation.type = TransformationType::Composite;
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
+                    stream >> transformation.data[i][j];
+                }
+            }
+            transformations.push_back(transformation);
+            element = element->NextSiblingElement("Composite");
         }
         stream.clear();
     }

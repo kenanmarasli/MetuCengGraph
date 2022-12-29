@@ -116,7 +116,7 @@ struct MeshInstance {
     std::vector<int> texture_ids;
 };
 
-enum class TransformationType { Translation, Rotation, Scaling };
+enum class TransformationType { Translation, Rotation, Scaling, Composite };
 
 struct Transformation {
     TransformationType type;
@@ -124,6 +124,7 @@ struct Transformation {
     float y;
     float z;
     float theta;
+    float data[4][4];
 };
 
 struct Image {
