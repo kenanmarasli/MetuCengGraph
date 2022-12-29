@@ -468,13 +468,15 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
 
     // Get VertexData
     element = root->FirstChildElement("VertexData");
-    stream << element->GetText() << std::endl;
-    Vertex vertex;
-    while (!(stream >> vertex.position.x).eof()) {
-        stream >> vertex.position.y >> vertex.position.z;
-        vertex_data.push_back(vertex);
+    if (element) {
+        stream << element->GetText() << std::endl;
+        Vertex vertex;
+        while (!(stream >> vertex.position.x).eof()) {
+            stream >> vertex.position.y >> vertex.position.z;
+            vertex_data.push_back(vertex);
+        }
+        stream.clear();
     }
-    stream.clear();
 
     // Get Texture Coordinates
     element = root->FirstChildElement("TexCoordData");
