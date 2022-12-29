@@ -70,6 +70,11 @@ struct Material {
     float roughness;
 };
 
+struct Vertex {
+    Vec3f position;
+    Vec2f uv;
+};
+
 struct Face {
     int v0_id;
     int v1_id;
@@ -178,7 +183,7 @@ struct Scene {
     std::vector<PointLight> point_lights;
     std::vector<AreaLight> area_lights;
     std::vector<Material> materials;
-    std::vector<Vec3f> vertex_data;
+    std::vector<Vertex> vertex_data;
     std::vector<Vec2f> texture_coordinates;
     std::vector<Mesh> meshes;
     std::vector<Triangle> triangles;

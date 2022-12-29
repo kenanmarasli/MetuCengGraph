@@ -469,9 +469,9 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
     // Get VertexData
     element = root->FirstChildElement("VertexData");
     stream << element->GetText() << std::endl;
-    Vec3f vertex;
-    while (!(stream >> vertex.x).eof()) {
-        stream >> vertex.y >> vertex.z;
+    Vertex vertex;
+    while (!(stream >> vertex.position.x).eof()) {
+        stream >> vertex.position.y >> vertex.position.z;
         vertex_data.push_back(vertex);
     }
     stream.clear();
@@ -540,21 +540,48 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
             plyMesh.texture_ids.clear();
         } else {
             Mesh mesh;
+            mesh.id = meshID;
+            stream >> mesh.material_id;
             int vertexOffset{0};
             const char *vertexOffsetText = child->Attribute("vertexOffset");
             if (vertexOffsetText) {
                 stream << vertexOffsetText << std::endl;
                 stream >> vertexOffset;
             }
-            mesh.id = meshID;
-            stream >> mesh.material_id;
+            int textureOffset{0};
+            const char *textureOffsetText = child->Attribute("textureOffset");
+            if (textureOffsetText) {
+                stream << textureOffsetText << std::endl;
+                stream >> textureOffset;
+            }
             stream << child->GetText() << std::endl;
             Face face;
             while (!(stream >> face.v0_id).eof()) {
                 stream >> face.v1_id >> face.v2_id;
+                int uv0_id = face.v0_id + textureOffset;
+                int uv1_id = face.v1_id + textureOffset;
+                int uv2_id = face.v2_id + textureOffset;
                 face.v0_id += vertexOffset;
                 face.v1_id += vertexOffset;
                 face.v2_id += vertexOffset;
+                if (uv0_id <= texture_coordinates.size()) {
+                    vertex_data[face.v0_id - 1].uv =
+                        texture_coordinates[uv0_id - 1];
+                } else {
+                    vertex_data[face.v0_id - 1].uv = {0.F, 0.F};
+                }
+                if (uv1_id <= texture_coordinates.size()) {
+                    vertex_data[face.v1_id - 1].uv =
+                        texture_coordinates[uv1_id - 1];
+                } else {
+                    vertex_data[face.v1_id - 1].uv = {0.F, 0.F};
+                }
+                if (uv2_id <= texture_coordinates.size()) {
+                    vertex_data[face.v2_id - 1].uv =
+                        texture_coordinates[uv2_id - 1];
+                } else {
+                    vertex_data[face.v2_id - 1].uv = {0.F, 0.F};
+                }
                 mesh.faces.push_back(face);
             }
             stream.clear();
