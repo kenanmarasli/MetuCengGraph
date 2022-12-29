@@ -498,8 +498,10 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
             stream << meshIDText << std::endl;
             stream >> meshID;
         }
+        int materialID{};
         child = element->FirstChildElement("Material");
         stream << child->GetText() << std::endl;
+        stream >> materialID;
 
         child = element->FirstChildElement("Faces");
         const char *plyFilename = child->Attribute("plyFile");
@@ -512,7 +514,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
             }
             PlyMesh plyMesh;
             plyMesh.id = meshID;
-            stream >> plyMesh.material_id;
+            plyMesh.material_id = materialID;
             ply::parsePly(plyPath.string().c_str(), plyMesh.mesh);
             child = element->FirstChildElement("Transformations");
             if (child) {
@@ -541,7 +543,14 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
         } else {
             Mesh mesh;
             mesh.id = meshID;
-            stream >> mesh.material_id;
+            mesh.material_id = materialID;
+            const char *shadingModeText = element->Attribute("shadingMode");
+            if (shadingModeText) {
+                std::string shadingMode{shadingModeText};
+                if (shadingMode == "smooth") {
+                    mesh.shading_mode = ShadingMode::Smooth;
+                }
+            }
             int vertexOffset{0};
             const char *vertexOffsetText = child->Attribute("vertexOffset");
             if (vertexOffsetText) {

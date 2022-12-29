@@ -81,6 +81,8 @@ struct Face {
     int v2_id;
 };
 
+enum class ShadingMode { Flat, Smooth };
+
 struct Mesh {
     int id;
     int material_id;
@@ -89,6 +91,7 @@ struct Mesh {
     bool has_motion{false};
     Vec3f motion;
     std::vector<int> texture_ids;
+    ShadingMode shading_mode{ShadingMode::Flat};
 };
 
 struct PlyMesh {
