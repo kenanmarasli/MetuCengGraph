@@ -26,6 +26,8 @@ struct Vec4f {
 
 enum class CameraType { Default, LookAt };
 
+enum class ToneMappingOperator { None, Photographic };
+
 struct Camera {
     CameraType type;
     Vec3f position;
@@ -41,6 +43,11 @@ struct Camera {
     bool has_depth_of_field{false};
     float aperture_size;
     float focus_distance;
+    ToneMappingOperator tmo{ToneMappingOperator::None};
+    float tmo_key_value;
+    float burn_percent;
+    float saturation;
+    float gamma;
 };
 
 struct PointLight {

@@ -156,6 +156,24 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
             camera.has_depth_of_field = false;
         }
 
+        child = element->FirstChildElement("Tonemap");
+        if (child) {
+            auto tmoElem = child->FirstChildElement("TMO");
+            std::string tmoStr{tmoElem->GetText()};
+            if (tmoStr == "Photographic") {
+                camera.tmo = ToneMappingOperator::Photographic;
+            }
+            tmoElem = child->FirstChildElement("TMOOptions");
+            stream << tmoElem->GetText() << std::endl;
+            stream >> camera.tmo_key_value >> camera.burn_percent;
+            tmoElem = child->FirstChildElement("Saturation");
+            stream << tmoElem->GetText() << std::endl;
+            stream >> camera.saturation;
+            tmoElem = child->FirstChildElement("Gamma");
+            stream << tmoElem->GetText() << std::endl;
+            stream >> camera.gamma;
+        }
+
         cameras.push_back(camera);
         element = element->NextSiblingElement("Camera");
     }
