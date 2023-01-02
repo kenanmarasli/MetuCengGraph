@@ -162,11 +162,13 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
 
     // Get Lights
     element = root->FirstChildElement("Lights");
+    // Ambient Light
     auto child = element->FirstChildElement("AmbientLight");
     if (child) {
         stream << child->GetText() << std::endl;
         stream >> ambient_light.x >> ambient_light.y >> ambient_light.z;
     }
+    // Point Lights
     element = element->FirstChildElement("PointLight");
     PointLight point_light;
     while (element) {
@@ -184,6 +186,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
         element = element->NextSiblingElement("PointLight");
     }
     stream.clear();
+    // Area Lights
     element = root->FirstChildElement("Lights");
     element = element->FirstChildElement("AreaLight");
     while (element) {
@@ -207,6 +210,25 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
 
         area_lights.push_back(area_light);
         element = element->NextSiblingElement("AreaLight");
+    }
+    stream.clear();
+    // Directional Lights
+    element = root->FirstChildElement("Lights");
+    element = element->FirstChildElement("DirectionalLight");
+    while (element) {
+        child = element->FirstChildElement("Direction");
+        stream << child->GetText() << std::endl;
+        child = element->FirstChildElement("Radiance");
+        stream << child->GetText() << std::endl;
+
+        DirectionalLight directionalLight;
+        stream >> directionalLight.direction.x >>
+            directionalLight.direction.y >> directionalLight.direction.z;
+        stream >> directionalLight.radiance.x >> directionalLight.radiance.y >>
+            directionalLight.radiance.z;
+
+        directional_lights.push_back(directionalLight);
+        element = element->NextSiblingElement("DirectionalLight");
     }
     stream.clear();
 

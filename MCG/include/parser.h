@@ -55,6 +55,11 @@ struct AreaLight {
     float extent;
 };
 
+struct DirectionalLight {
+    Vec3f direction;
+    Vec3f radiance;
+};
+
 enum class MaterialType { Default, Conductor, Dielectric, Mirror };
 
 struct Material {
@@ -186,6 +191,7 @@ struct Scene {
     Vec3f ambient_light;
     std::vector<PointLight> point_lights;
     std::vector<AreaLight> area_lights;
+    std::vector<DirectionalLight> directional_lights;
     std::vector<Material> materials;
     std::vector<Vertex> vertex_data;
     std::vector<Vec2f> texture_coordinates;
