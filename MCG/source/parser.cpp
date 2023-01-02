@@ -231,6 +231,35 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
         element = element->NextSiblingElement("DirectionalLight");
     }
     stream.clear();
+    // Directional Lights
+    element = root->FirstChildElement("Lights");
+    element = element->FirstChildElement("SpotLight");
+    while (element) {
+        child = element->FirstChildElement("Position");
+        stream << child->GetText() << std::endl;
+        child = element->FirstChildElement("Direction");
+        stream << child->GetText() << std::endl;
+        child = element->FirstChildElement("Intensity");
+        stream << child->GetText() << std::endl;
+        child = element->FirstChildElement("CoverageAngle");
+        stream << child->GetText() << std::endl;
+        child = element->FirstChildElement("FalloffAngle");
+        stream << child->GetText() << std::endl;
+
+        SpotLight spotLight;
+        stream >> spotLight.position.x >> spotLight.position.y >>
+            spotLight.position.z;
+        stream >> spotLight.direction.x >> spotLight.direction.y >>
+            spotLight.direction.z;
+        stream >> spotLight.intensity.x >> spotLight.intensity.y >>
+            spotLight.intensity.z;
+        stream >> spotLight.coverage;
+        stream >> spotLight.falloff;
+
+        spot_lights.push_back(spotLight);
+        element = element->NextSiblingElement("SpotLight");
+    }
+    stream.clear();
 
     // Get Materials
     element = root->FirstChildElement("Materials");
