@@ -79,6 +79,7 @@ enum class MaterialType { Default, Conductor, Dielectric, Mirror };
 
 struct Material {
     MaterialType type;
+    bool degamma{false};
     Vec3f ambient;
     Vec3f diffuse;
     Vec3f specular;

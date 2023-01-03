@@ -295,6 +295,14 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
                 material.type = MaterialType::Mirror;
             }
         }
+        material.degamma = false;
+        const char *degammaAttr = element->Attribute("degamma");
+        if (degammaAttr) {
+            std::string degammaStr{degammaAttr};
+            if (degammaStr == "true") {
+                material.degamma = true;
+            }
+        }
         child = element->FirstChildElement("AmbientReflectance");
         if (child) {
             stream << child->GetText() << std::endl;
