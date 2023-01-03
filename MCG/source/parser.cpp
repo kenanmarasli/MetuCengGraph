@@ -52,7 +52,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
         throw std::runtime_error("Error: The xml file cannot be loaded.");
     }
 
-    auto root = file.FirstChild();
+    auto root = file.FirstChildElement("Scene");
     if (!root) {
         throw std::runtime_error("Error: Root is not found.");
     }
