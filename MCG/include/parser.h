@@ -75,6 +75,10 @@ struct SpotLight {
     float falloff;
 };
 
+struct SphericalDirectionalLight {
+    int image_id;
+};
+
 enum class MaterialType { Default, Conductor, Dielectric, Mirror };
 
 struct Material {
@@ -209,6 +213,7 @@ struct Scene {
     std::vector<AreaLight> area_lights;
     std::vector<DirectionalLight> directional_lights;
     std::vector<SpotLight> spot_lights;
+    std::vector<SphericalDirectionalLight> spherical_directional_lights;
     std::vector<Material> materials;
     std::vector<Vertex> vertex_data;
     std::vector<Vec2f> texture_coordinates;

@@ -249,7 +249,7 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
         element = element->NextSiblingElement("DirectionalLight");
     }
     stream.clear();
-    // Directional Lights
+    // Spot Lights
     element = root->FirstChildElement("Lights");
     element = element->FirstChildElement("SpotLight");
     while (element) {
@@ -276,6 +276,20 @@ void MCG::Scene::loadFromXml(const std::string &filepath) {
 
         spot_lights.push_back(spotLight);
         element = element->NextSiblingElement("SpotLight");
+    }
+    stream.clear();
+    // Spherical Directional Lights
+    element = root->FirstChildElement("Lights");
+    element = element->FirstChildElement("SphericalDirectionalLight");
+    while (element) {
+        child = element->FirstChildElement("ImageId");
+        stream << child->GetText() << std::endl;
+
+        SphericalDirectionalLight sphericalDirectionalLight;
+        stream >> sphericalDirectionalLight.image_id;
+
+        spherical_directional_lights.push_back(sphericalDirectionalLight);
+        element = element->NextSiblingElement("SphericalDirectionalLight");
     }
     stream.clear();
 
